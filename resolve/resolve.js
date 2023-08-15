@@ -1,14 +1,10 @@
-const { books, authors } = require('../data')
-const { Book, Author } = require('../models')
+// This is mocking data
+// const { books, authors } = require('../data')
 
 const resolvers = {
     // Query
     Query: {
-        books: async (parent, agrs, context) => { 
-            const b = await context.getAllBooks();
-            console.log(b)
-           return b;
-        },
+        books: async (parent, agrs, { getAllBooks }) => await getAllBooks(),
         book: (parent, agrs) => books.find(book => book.id == agrs.id),
         /*
             {
@@ -18,42 +14,26 @@ const resolvers = {
             }
             => sau khi query lấy dk data book, thì có trường authorId là 1 => tiếp tục map với resolver author của Book để lấy được giá trị của 
         */
-        authors: () => authors,
-        author: (parent, agrs) => authors.find(authors => authors.id == agrs.id)
+        authors: async (parent, agrs, { getAllAuthors }) => await getAllAuthors(),
+        author: async (parent, agrs, { getAuthorById }) => await getAuthorById(agrs.id)
     },
     // Do Book có trường author là Type Author, nên add thêm query cho Book để xử lý trả ra đúng kiểu dữ liệu cho trường author
     Book: {
-        author: async (parrent, agrs) => { 
+        author: async (parrent, agrs, context) => { 
             // Sử dụng parrent để lấy authorId từ book => lấy giá trị của author
             // => Thì ra đây là sức mạnh của Graphql :))))))))
-            return authors.find(author => author.id == parrent.authorId)
+            // return authors.find(author => author.id == parrent.authorId)
+            return await context.getAuthorById(parrent.authorId);
          }
     },
     Author: {
-        books: (parrent, agrs) => {
-            return books.filter(book => book.id == parrent.id)
-        }
+        books: async (parrent, agrs, { getBookByAuthorId }) => await getBookByAuthorId(parrent._id)
     },
 
     // Mutation
     Mutation: {
-        createAuthor: async (parent, agrs) => {
-            // Save record
-            const newAuthor = new Author({
-                name: agrs.name,
-                age: agrs.age
-            })
-            return await newAuthor.save();
-        },
-        createBook: async (parent, agrs) => {
-            console.log(agrs);
-            const newBook = new Book({
-                name: agrs.name,
-                gener: agrs.gener,
-                authorId: agrs.authorId
-            })
-            return await newBook.save();
-        }
+        createAuthor: async (parent, agrs, { createAuthor }) => await createAuthor(agrs),
+        createBook: async (parent, agrs, { createBook }) => await createBook(agrs)
     }
 }
 
