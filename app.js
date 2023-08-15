@@ -7,7 +7,7 @@ const env = require('dotenv').config();
 const typeDefs = require('./schema/schema')
 const resolvers = require('./resolve/resolve')
 const mongoDBMethods = require('./models/db')
-const PORT = 3000
+const PORT = env.parsed.PORT || 3000
 
 const connectDB = async () => {
    try {

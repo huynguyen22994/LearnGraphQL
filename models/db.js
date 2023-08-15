@@ -3,6 +3,7 @@ const Author = require('./Author')
 
 const mongoDBMethods = {
     getAllBooks: async () => await Book.find(),
+    getBookById: async (id) => await Book.findOne({ _id: id }),
     getBookByAuthorId: async authorId => await Book.find({ authorId: authorId }),
     createBook: async agrs => {
         const newBook = new Book({
