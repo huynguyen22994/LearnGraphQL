@@ -22,7 +22,7 @@ const typeDefs = `#graphql
     }
     type Mutation {
         createAuthor (name: String, age: Int): Author
-        createBook (name: String, gener: String, authorId: ID!): Book
+        createBook (name: String, genre: String, authorId: ID!): Book
     }
 `
 
