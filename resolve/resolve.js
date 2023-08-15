@@ -5,7 +5,7 @@ const resolvers = {
     // Query
     Query: {
         books: async (parent, agrs, { getAllBooks }) => await getAllBooks(),
-        book: (parent, agrs) => books.find(book => book.id == agrs.id),
+        book: (parent, agrs, { getBookById }) => getBookById(agrs._id),
         /*
             {
                 id: 1,
@@ -15,7 +15,7 @@ const resolvers = {
             => sau khi query lấy dk data book, thì có trường authorId là 1 => tiếp tục map với resolver author của Book để lấy được giá trị của 
         */
         authors: async (parent, agrs, { getAllAuthors }) => await getAllAuthors(),
-        author: async (parent, agrs, { getAuthorById }) => await getAuthorById(agrs.id)
+        author: async (parent, agrs, { getAuthorById }) => await getAuthorById(agrs._id)
     },
     // Do Book có trường author là Type Author, nên add thêm query cho Book để xử lý trả ra đúng kiểu dữ liệu cho trường author
     Book: {

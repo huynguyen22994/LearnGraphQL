@@ -2,13 +2,13 @@ const { qgl } = require('apollo-server-express')
 
 const typeDefs = `#graphql
     type Book {
-        id: ID,
+        _id: ID,
         name: String,
         genre: String,
         author: Author
     }
     type Author {
-        id: ID!,
+        _id: ID!,
         name: String,
         age: Int,
         books: [Book]
@@ -16,9 +16,9 @@ const typeDefs = `#graphql
     # ROOT TYPE
     type Query {
         books: [Book]
-        book (id: ID!): Book
+        book (_id: ID!): Book
         authors: [Author]
-        author (id: ID!): Author
+        author (_id: ID!): Author
     }
     type Mutation {
         createAuthor (name: String, age: Int): Author
