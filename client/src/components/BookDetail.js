@@ -1,14 +1,16 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import Query from '../graphql-client';
+import { Query } from '../graphql-client';
 
 function BookDetail({ bookId }) {
     const { loading, error, data } = Query.GetSingleBook({
         variables: {
             id: bookId
-        }
+        },
+        skip: bookId === null
     });
-    const book = data ? data.book : {};
+    if(error) { return <div>Lỗi...</div> }
+    const book = data && data.book ? data.book : {};
 
     return ( 
     <>
