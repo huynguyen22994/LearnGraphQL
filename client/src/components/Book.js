@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Col, Row, Modal, Button  } from 'react-bootstrap';
-import Query from '../graphql-client';
+import { Query } from '../graphql-client';
 
 import BookDetail from './BookDetail';
 import BookForm from './BookForm';
@@ -11,6 +11,7 @@ function Book() {
     const [showAuthorForm, setShowAuthorForm] = useState(false);
     const [bookSelected, setBookSelected] = useState(null);
 
+    //Graphql
     const { loading, error, data } = Query.GetBooks();
     
 
@@ -20,6 +21,11 @@ function Book() {
 
     const handleCloseAuthorForm = () => {
         setShowAuthorForm(false)
+    }
+
+    const onSubmitCB = () => {
+        handleClose();
+        handleCloseAuthorForm();
     }
 
     return ( 
@@ -32,7 +38,7 @@ function Book() {
                     <Row>
                         {
                             data && data.books.map((book) => {
-                                return <Col xs='3' key={book._id}>
+                                return <Col xs='3' key={book._id} className='mt-2 custom-card'>
                                     <Card border="primary" onClick={() => setBookSelected(book._id)}>
                                         <Card.Header>
                                             { book.name }
@@ -53,36 +59,20 @@ function Book() {
 
             <Modal show={showBookForm} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Thêm sách</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                   <BookForm></BookForm>
+                   <BookForm onSubmitCB={onSubmitCB}></BookForm>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleClose}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
             </Modal>
 
             <Modal show={showAuthorForm} onHide={handleCloseAuthorForm}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Thêm tác giả</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                   <BookForm></BookForm>
+                   <AuthorForm onSubmitCB={onSubmitCB}></AuthorForm>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseAuthorForm}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleCloseAuthorForm}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
             </Modal>
         </>
     );
